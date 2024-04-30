@@ -1,9 +1,9 @@
-title: Hacker-Blog
-description: "A Jekyll Blog Theme For Hackers"
+title: Romabri
+description: "Este sera un blog para ir dejando lo que aprenda"
 author:
-  name: "SomeHacker"
-  email: "someone@somewebsite.somedomain"
-  url: "https://ashishchaudhary.in/hacker-blog"
+  name: "Romabri"
+  email: ""
+  url: "https://romabri.github.io"
 
 baseurl: /
 
