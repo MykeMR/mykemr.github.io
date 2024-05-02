@@ -2,14 +2,15 @@
 title: WriteUps DockerLab
 published: true
 ---
+![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/c786c0f9-71ee-46b7-b482-6e16406a9ea5)
+
 
 
 
 [Pulsa aquí para ser redirigido a los WriteUps](another-page).
 
-There should be whitespace between paragraphs.
 
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
+
 
 # [](#header-1)Descripción:
 
@@ -25,4 +26,4 @@ Este repositorio tiene como objetivo principal proporcionar recursos educativos 
 
 ¡Explora, aprende y mejora tus habilidades de ciberseguridad con nuestros WriteUps de Máquinas Vulnerables!
 
-![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/c786c0f9-71ee-46b7-b482-6e16406a9ea5)
+
