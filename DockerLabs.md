@@ -29,9 +29,31 @@ Bienvenido a mi repositorio web de WriteUps de Máquinas Vulnerables. Aquí enco
   }
 </style>
 
+<input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Buscar por título...">
+
 <ul>
   {% for post in site.categories.dockerlabs %}
     <li><a href="{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>
+
+<script>
+  function searchFunction() {
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.getElementById('searchInput');
+    filter = input.value.toUpperCase();
+    ul = document.querySelector('ul');
+    li = ul.getElementsByTagName('li');
+
+    for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName('a')[0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = '';
+      } else {
+        li[i].style.display = 'none';
+      }
+    }
+  }
+</script>
 
