@@ -5,8 +5,24 @@ title: Categorías
 
 <h1>Categorías</h1>
 
+<style>
+  ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el relleno predeterminado de la lista */
+  }
+
+  ul li {
+    margin-bottom: 10px; /* Ajusta el espaciado entre los elementos de la lista */
+  }
+
+  ul li a {
+    font-size: 1.2em; /* Cambia el tamaño de fuente según tus preferencias */
+  }
+</style>
+
 <ul>
   {% for category in site.categories %}
-    <li><a href="/categorias/{{ category[0] | slugify }}">{{ category[0] }}</a></li>
+    <li><a href="/categorias/{{ category[0] | slugify }}" style="font-size: 1.5em;">{{ category[0] }}</a></li>
   {% endfor %}
 </ul>
+
