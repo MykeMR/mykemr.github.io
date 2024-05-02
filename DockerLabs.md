@@ -1,7 +1,7 @@
 ---
 layout: default
 title: DockerLabs
-permalink: /categorias/DockerLabs/
+permalink: /categorias/dockerlabs/
 ---
 
 # WriteUps DockerLab
@@ -44,7 +44,7 @@ Bienvenido a mi repositorio web de WriteUps de Máquinas Vulnerables. Aquí enco
 <br><br> <!-- Espacio adicional entre el buscador y la lista de enlaces -->
 
 <ul>
-  {% for post in site.categories.DockerLabs %}
+  {% for post in site.categories.dockerlabs %}
     <li><a href="{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>
