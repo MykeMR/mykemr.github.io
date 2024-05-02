@@ -7,7 +7,7 @@ published: true
 
 
 
-[Pulsa aquí para ser redirigido a los WriteUps](Trust.md).
+[Pulsa aquí para ser redirigido a los WriteUps](romabri.github.io/Trust).
 
 
 
