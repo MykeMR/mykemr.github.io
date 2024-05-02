@@ -1,6 +1,7 @@
 ---
 title: Vacaciones - DockerLabs
 published: true
+categories: dockerlabs
 ---
 | OS     | Dificultad  | Creator           |
 | ------ | ----------- | -------------     | 
