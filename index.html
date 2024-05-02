@@ -3,9 +3,25 @@ layout: default
 title: Categorías
 ---
 
-<h1>Categorías</h1>
-
 <style>
+  body {
+    background-color: #000; /* Color de fondo negro */
+    overflow: hidden; /* Evita el desplazamiento vertical */
+  }
+
+  @keyframes hacking {
+    0% {
+      background-position: 0 0; /* Posición inicial del fondo */
+    }
+    100% {
+      background-position: 1000px 1000px; /* Posición final del fondo (ajustar según sea necesario) */
+    }
+  }
+
+  body {
+    animation: hacking 10s linear infinite; /* Duración de la animación y repetición infinita */
+  }
+
   ul {
     list-style-type: none; /* Elimina los puntos de la lista */
     padding: 0; /* Elimina el relleno predeterminado de la lista */
@@ -16,13 +32,15 @@ title: Categorías
   }
 
   ul li a {
-    font-size: 1.2em; /* Cambia el tamaño de fuente según tus preferencias */
+    font-size: 1.5em; /* Cambia el tamaño de fuente según tus preferencias */
   }
 </style>
 
+<h1>Categorías</h1>
+
 <ul>
   {% for category in site.categories %}
-    <li><a href="/categorias/{{ category[0] | slugify }}" style="font-size: 1.5em;">{{ category[0] }}</a></li>
+    <li><a href="/categorias/{{ category[0] | slugify }}">{{ category[0] }}</a></li>
   {% endfor %}
 </ul>
 
