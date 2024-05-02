@@ -1,7 +1,7 @@
 ---
 layout: default
 title: DockerLabs
-permalink: /categorias/dockerlabs/
+permalink: /categorias/DockerLabs/
 ---
 
 # WriteUps DockerLab
