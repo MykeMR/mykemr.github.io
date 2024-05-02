@@ -1,5 +1,11 @@
-# Trust
-  
+
+
+---
+title: Trust
+published: true
+---
+
+ 
 | OS     | Dificultad  | Creator           |
 | ------ | ----------- | -------------     | 
 | Linux  | Super Fácil | ElPinguinoDeMario | 
