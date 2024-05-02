@@ -27,9 +27,21 @@ Bienvenido a mi repositorio web de WriteUps de Máquinas Vulnerables. Aquí enco
   ul li a {
     font-size: 1.2em; /* Cambia el tamaño de fuente según tus preferencias */
   }
+
+  #searchInput {
+    width: 100%;
+    padding: 10px;
+    background-color: black; /* Fondo negro */
+    color: lime; /* Letras de color lima */
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box; /* Incluir el padding en el ancho total */
+  }
 </style>
 
 <input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Buscar por título...">
+<br><br> <!-- Espacio adicional entre el buscador y la lista de enlaces -->
 
 <ul>
   {% for post in site.categories.dockerlabs %}
@@ -56,4 +68,3 @@ Bienvenido a mi repositorio web de WriteUps de Máquinas Vulnerables. Aquí enco
     }
   }
 </script>
-
