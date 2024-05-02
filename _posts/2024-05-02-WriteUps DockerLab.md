@@ -7,7 +7,7 @@ published: true
 
 
 
-[Pulsa aquí para ser redirigido a los WriteUps](another-page).
+[Pulsa aquí para ser redirigido a los WriteUps](Trust.md).
 
 
 
