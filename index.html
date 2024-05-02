@@ -7,6 +7,6 @@ title: Categorías
 
 <ul>
   {% for category in site.categories %}
-    <li><a href="/categorias/{{ category | first | slugify }}">{{ category | first }}</a></li>
+    <li><a href="/categorias/{{ category[0] | slugify }}">{{ category[0] }}</a></li>
   {% endfor %}
 </ul>
