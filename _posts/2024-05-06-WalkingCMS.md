@@ -1,5 +1,5 @@
 ---
-title: Vacaciones - DockerLabs
+title: WalkingCMS - DockerLabs
 published: true
 categories: DockerLabs
 ---
