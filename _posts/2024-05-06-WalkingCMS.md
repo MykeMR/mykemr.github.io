@@ -6,7 +6,7 @@ categories: DockerLabs
 
 | OS     | Dificultad  | Creator           |
 | ------ | ----------- | -------------     | 
-| Linux  | Muy Fácil   | ElPinguinoDeMario | 
+| Linux  | Fácil       | ElPinguinoDeMario | 
 
 ## Reconocimiento
 
