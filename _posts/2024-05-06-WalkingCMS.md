@@ -12,6 +12,17 @@ categories: DockerLabs
 
 ![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/fbaf571c-df38-48e6-9158-9fa9730923a2)
 
+`nmap -p- --open -sS -sC -sV --min-rate=5000 -vvv -n -Pn -oN escaneo 172.17.0.2`
+- `-p-` - Busqueda de puertos abiertos
+- `--open` - Enumera los puertos abiertos
+- `-sS` - Es un modo de escaneo rapido
+- `-sC-` - Que use un conjunto de scripts de reconocimiento
+- `-sV` - Que encuentre la version del servicio abirto
+- `--min-rate=5000` - Hace que el reconocimiento aun vaya mas rapido mandando no menos de 5000 paquetes
+- `-n` - No hace resolución DNS
+- `-Pn` - No hace ping
+- `-vvv` - Muestra en pantalla a medida que encuentra puertos (Verbose)
+
 Vemos únicamente el puerto 80 abierto.
 
 ![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/1dce5b1d-f639-4aa2-a825-f3f6e88e59a3)
@@ -21,12 +32,13 @@ Vamos a realizar un reconocimiento web.
 
 Usamos Gobuster para hacer un reconocimiento web y ver que directorios podemos encontrar en dicho sitio.
 
-gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php
+Usamos `Gobuster` para hacer un reconocimiento web y ver que directorios podemos encontrar en dicho sitio.
 
-    gobuster dir - Indica que estás utilizando la herramienta Gobuster para realizar un escaneo de directorios.
-    -u http://172.20.10.5/ Especifica la URL objetivo que deseas escanear en busca de directorios.
-    -w Especifica que diccionario queremos usar
-    -x Para indicar que tipo de extension queremos que nos encuentre
+`gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php`
+- `gobuster dir` - Indica que estás utilizando la herramienta Gobuster para realizar un escaneo de directorios.
+- `-u http://172.20.10.5/` Especifica la URL objetivo que deseas escanear en busca de directorios.
+- `-w` Especifica que diccionario queremos usar
+- `-x` Para indicar que tipo de extension queremos que nos encuentre
 
 
 ![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/b4dd3355-01a6-4707-b550-231608084bf4)
