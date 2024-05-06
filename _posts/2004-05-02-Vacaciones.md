@@ -6,7 +6,8 @@ categories: DockerLabs
 
 
 ## Video de YouTube
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Dkc39S9YteI?start=77" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Dkc39S9YteI" frameborder="0" allowfullscreen></iframe>
+
 
 
 | OS     | Dificultad  | Creator           |
