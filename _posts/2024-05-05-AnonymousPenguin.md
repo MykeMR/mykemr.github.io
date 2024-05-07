@@ -1,4 +1,4 @@
-![image](https://github.com/romabri/romabri.github.io/assets/51706860/b47107da-4efd-466e-978d-50c4968533ed)---
+---
 title: AnonymousPenguin - DockerLabs
 published: true
 categories: DockerLabs
