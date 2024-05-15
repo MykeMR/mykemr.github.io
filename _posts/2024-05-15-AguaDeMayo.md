@@ -58,6 +58,13 @@ Ejecutamos el binario.
 
 ![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/853bd484-2586-4af6-9b17-c0d427f7d401)
 
-Tenemos un modo que es `!`. Con este símbolo más un comando, ya nos podemos mover libremente por la máquina como root.
+Cambiamos el permiso a suid de la bash 
 
-![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/410f5fd6-dd67-42cb-aa2e-8e837b0c7ce7)
+![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/a75f867f-86d3-49a8-8671-c5798595affb)
+
+Ahora salimos y ejecutamos bash -p seremos root
+
+![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/1f46cda2-f787-4119-9290-91192ad78ea2)
+
+
+
