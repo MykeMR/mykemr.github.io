@@ -71,8 +71,7 @@ Nos autenticamos en el portal de administración de WordPress en /wp-admin.
 
 ### Explotación del Plugin Site Editor
 
-Accedemos al panel de administración y encontramos el plugin Site Editor en la versión 1.1, conocido por ser vulnerable a un LFI (Local File Inclusion). Descargamos el script de explotación desde GitHub.
-https://github.com/jessisec/CVE-2018-7422
+Accedemos al panel de administración y encontramos el plugin Site Editor en la versión 1.1, conocido por ser vulnerable a un LFI (Local File Inclusion). Descargamos el script de explotación desde [GitHub](https://github.com/jessisec/CVE-2018-7422).
 
 ![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/327c21f3-9caf-4583-8d17-b0acf8bca904)
 
