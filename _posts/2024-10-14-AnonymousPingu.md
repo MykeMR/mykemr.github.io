@@ -82,7 +82,7 @@ Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular
 
 ![image](https://github.com/user-attachments/assets/c6b9c6c5-e334-466c-ac7c-931e21464118)
 
-Nos ponemos a escuchar por netcat en mi caso por el 444
+Nos ponemos a escuchar por netcat en mi caso por el 4444
 
 ```bash 
 nc -lvnp 4444
