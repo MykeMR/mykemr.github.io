@@ -148,10 +148,13 @@ Vemos que hemos subido de usuario y ya estamos con el usuario `pingu`.
 
 ![Cambio de usuario](https://github.com/user-attachments/assets/0c3da884-f0fb-45df-9692-59312d0752ab)
 
+## Usuario pingu
+
 Vamos a volver a ejecutar el comando `sudo -l`.
 
 ![Comando sudo](https://github.com/user-attachments/assets/0cedf58f-0919-4d19-a6eb-c37df62b1d4b)
 
+## Usuario gladys
 Observamos que podemos ejecutar `nmap` y `dpkg` como `gladys`. Para ello, debemos proceder de la siguiente manera:
 
 En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`.
@@ -168,5 +171,11 @@ Vemos que hemos subido de usuario y ya estamos con el usuario `gladys`.
 ![image](https://github.com/user-attachments/assets/0e482934-f8cd-4cd1-bede-abf6bd888fa6)
 
 
-## Escalada de Privilegios
+## Usuario root
+Vamos a volver a ejecutar el comando `sudo -l`.
 
+![image](https://github.com/user-attachments/assets/fb5bbc2b-bd10-4091-bb4c-a9b168f0d487)
+
+Observamos que podemos ejecutar `chown` como `root`. Para ello, debemos proceder de la siguiente manera:
+
+Vamos a cambiar los permisos de `/etc/passwd` para poder tener permisos con nuestro usuario.
