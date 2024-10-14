@@ -53,14 +53,50 @@ Vemos que hay un directorio upload pero no hay nada dentro.
 
 ![image](https://github.com/user-attachments/assets/d2061512-4cf0-4b1a-90a6-0abaad99a259)
 
+## FTP
+
 Procedemos a explorar el servicio FTP, ya que hemos identificado anteriormente que el usuario `anonymous` está habilitado y que tenemos permisos de escritura en el directorio `upload`. 
+
+**Nota:** Los usuarios `anonymous` no suelen tener contraseñas o son opcionales en muchos servidores FTP.
 
 A continuación, intentamos conectarnos al servidor FTP utilizando el siguiente comando:
 ```bash
 ftp 172.17.0.2
 ```
 
-## Obtención de Acceso
+Al intentar acceder al servidor FTP con el usuario `anonymous` y sin contraseña, observamos que podemos entrar perfectamente. 
+
+![image](https://github.com/user-attachments/assets/ea8254c0-879e-4ece-b542-3f19975c77a5)
+
+Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular para crear shells PHP que nos permiten obtener acceso remoto al servidor. La ruta de la reverseshell es la siguiente:
+
+[Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
+
+### Pasos para Cargar la Reverseshell
+
+1. **Preparar la Reverseshell**: Creamos un archivo de reverseshell en nuestro sistema local utilizando el código disponible en la ruta mencionada anteriormente.
+2. **Subir el Archivo**: Utilizamos el comando de FTP para subir el archivo al directorio `upload`.
+3. **Ejecutar la Reverseshell**: Una vez que el archivo esté en el servidor, lo ejecutaremos para establecer la conexión.
+
+![image](https://github.com/user-attachments/assets/c6b9c6c5-e334-466c-ac7c-931e21464118)
+
+Nos ponemos a escuchar por netcat en mi caso por el 444
+
+```bash 
+nc -lvnp 4444
+```
+
+Luego, accedemos a la ruta de la página web donde hemos cargado la reverseshell:
+
+![image](https://github.com/user-attachments/assets/efce64bc-e77c-42cb-8b26-c651f630a409)
+
+Y ya tendriamos acceso a la maquina.
+
+![image](https://github.com/user-attachments/assets/bbc7b73c-09e9-4095-a526-e827fdead208)
+
+## TTY ReverseShell
+
+
 
 ## Escalada de Privilegios
 
