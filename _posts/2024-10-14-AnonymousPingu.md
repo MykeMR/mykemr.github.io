@@ -7,4 +7,4 @@ categories: DockerLabs
 
 | OS     | Dificultad  | Creator           |
 | ------ | ----------- | -------------     | 
-| Linux  |  Medio      | ElPinguinoDeMario | 
+| Linux  |  Facil      | ElPinguinoDeMario | 
