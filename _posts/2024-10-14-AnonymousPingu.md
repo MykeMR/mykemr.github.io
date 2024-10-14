@@ -140,6 +140,33 @@ sudo -u pingu /usr/bin/man find
 
 ![image](https://github.com/user-attachments/assets/7300b460-b586-4311-b862-5bd5df506bd4)
 
+Si ahora ponemos `!/bin/bash`:
+
+![image](https://github.com/user-attachments/assets/eb9e8678-2261-4e21-96bc-9a49f19abafc)
+
+Vemos que hemos subido de usuario y ya estamos con el usuario `pingu`.
+
+![Cambio de usuario](https://github.com/user-attachments/assets/0c3da884-f0fb-45df-9692-59312d0752ab)
+
+Vamos a volver a ejecutar el comando `sudo -l`.
+
+![Comando sudo](https://github.com/user-attachments/assets/0cedf58f-0919-4d19-a6eb-c37df62b1d4b)
+
+Observamos que podemos ejecutar `nmap` y `dpkg` como `gladys`. Para ello, debemos proceder de la siguiente manera:
+
+En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`.
+
+```bash
+sudo -u gladys /usr/bin/dpkg -l
+```
+Si ahora ponemos `!/bin/bash`:
+
+![image](https://github.com/user-attachments/assets/7f86e264-8d5c-4fb9-8302-0177b78e7dbf)
+
+Vemos que hemos subido de usuario y ya estamos con el usuario `gladys`.
+
+![image](https://github.com/user-attachments/assets/0e482934-f8cd-4cd1-bede-abf6bd888fa6)
+
 
 ## Escalada de Privilegios
 
