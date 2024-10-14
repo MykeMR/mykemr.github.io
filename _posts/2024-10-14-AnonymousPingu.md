@@ -96,7 +96,40 @@ Y ya tendriamos acceso a la maquina.
 
 ## TTY ReverseShell
 
+### Iniciar una sesión de shell interactiva
+En nuestra shell básica, ejecutamos el siguiente comando para forzar la creación de una sesión de bash interactiva:
 
+```bash
+script /dev/null -c bash
+```
+### Suspender la shell
+Una vez que el comando anterior está en ejecución, utilizamos
+
+```bash
+Control+Z
+```
+para suspender temporalmente nuestra shell.
+
+### Preparar nuestro terminal local:
+Antes de volver a nuestra shell, configuramos nuestro terminal local:
+
+```bash
+stty raw -echo; fg
+```
+
+### Resetear la configuración del terminal
+Ahora que tenemos el control de la shell, la reseteamos para asegurar que se comporta correctamente:
+```bash
+reset
+```
+
+### Configura el tipo de terminal:
+
+```bash
+xterm
+export TERM=xterm
+export SHELL=bash
+```
 
 ## Escalada de Privilegios
 
