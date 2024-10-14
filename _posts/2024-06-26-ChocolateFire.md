@@ -11,9 +11,6 @@ categories: DockerLabs
 ## Escaneo y Reconocimiento de puertos
 
 Vamos a iniciar nuestro reconocimiento con un rápido escaneo de nmap.
-
-![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/b34f0c31-9d39-45c2-8bbc-301884d5447b)
-
 `nmap -p- --open -sS -sC -sV --min-rate=5000 -vvv -n -Pn -oN escaneo 172.17.0.2`
 -  `-p-`: Escanea todos los puertos (1-65535).
 - `--open`: Solo muestra los puertos abiertos.
@@ -24,6 +21,8 @@ Vamos a iniciar nuestro reconocimiento con un rápido escaneo de nmap.
 - `-n`: No realiza resolución DNS.
 - `-Pn`: No realiza ping previo para determinar si el host está activo.
 - `-vvv`: Muestra resultados detallados y en tiempo real.
+
+![imagen](https://github.com/romabri/romabri.github.io/assets/51706860/b34f0c31-9d39-45c2-8bbc-301884d5447b)
 
 Vemos que estan abiertos varios puertos, vamos a investigar cada una hasta encontrar algo interesante.
 
