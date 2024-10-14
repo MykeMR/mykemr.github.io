@@ -25,7 +25,27 @@ sudo nmap -p- --open -sS --min-rate 5000 -vvv -n -Pn 172.17.0.2 -oG ports
 
 ![image](https://github.com/user-attachments/assets/fbdcf75b-e25d-4d92-8797-3e558b2a92e6)
 
+A continuación, evaluamos si los puertos abiertos presentan alguna vulnerabilidad, además de obtener más información sobre los servicios asociados a esos puertos. Para ello, utilizamos el siguiente comando de **nmap**:
+
+```bash
+nmap -p 21,80 -sCV 172.17.0.2 -oG targeted
+```
+![image](https://github.com/user-attachments/assets/35d4dab8-0433-48d9-9943-52e4e2a36bfd)
+
 ## Exploración Web
+Al acceder a la página web, observamos lo siguiente:
+
+![image](https://github.com/user-attachments/assets/ede1f8d5-c313-4e69-94ee-aee4e813aa5e)
+
+Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio. El siguiente comando fue ejecutado:
+
+```bash
+gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img
+```
+- `gobuster dir` - Indica que estás utilizando la herramienta Gobuster para realizar un escaneo de directorios.
+- `-u http://172.17.0.2/` Especifica la URL objetivo que deseas escanear en busca de directorios.
+- `-w` Especifica que diccionario queremos usar
+- `-x` Para indicar que tipo de extension queremos que nos encuentre
 
 ## Obtención de Acceso
 
