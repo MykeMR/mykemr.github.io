@@ -98,13 +98,11 @@ Y ya tendriamos acceso a la maquina.
 
 ### Iniciar una sesión de shell interactiva
 En nuestra shell básica, ejecutamos el siguiente comando para forzar la creación de una sesión de bash interactiva:
-
 ```bash
 script /dev/null -c bash
 ```
 ### Suspender la shell
 Una vez que el comando anterior está en ejecución, utilizamos
-
 ```bash
 Control+Z
 ```
@@ -112,7 +110,6 @@ para suspender temporalmente nuestra shell.
 
 ### Preparar nuestro terminal local:
 Antes de volver a nuestra shell, configuramos nuestro terminal local:
-
 ```bash
 stty raw -echo; fg
 ```
@@ -124,12 +121,25 @@ reset
 ```
 
 ### Configura el tipo de terminal:
-
 ```bash
 xterm
 export TERM=xterm
 export SHELL=bash
 ```
+
+## Intrusión en la Máquina
+
+Ya estamos dentro de la máquina. Si ejecutamos el comando `sudo -l`, vemos que podemos ejecutar `man` como `Pingu`. Para ello, debemos hacer lo siguiente:
+
+![Interfaz de la herramienta](https://github.com/user-attachments/assets/cef8486b-9c3c-4905-90b8-1dc9d1c54986)
+
+Este tipo de herramienta tiene un apartado que, al final, dice *MORE*. Si en lugar de presionar para bajar, escribimos `!/bin/bash`, se generará una shell con ese usuario.
+```shell
+sudo -u pingu /usr/bin/man find
+```
+
+![image](https://github.com/user-attachments/assets/7300b460-b586-4311-b862-5bd5df506bd4)
+
 
 ## Escalada de Privilegios
 
