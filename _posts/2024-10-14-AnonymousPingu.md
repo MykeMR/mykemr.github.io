@@ -68,6 +68,8 @@ Al intentar acceder al servidor FTP con el usuario `anonymous` y sin contraseña
 
 ![image](https://github.com/user-attachments/assets/ea8254c0-879e-4ece-b542-3f19975c77a5)
 
+## Intrusión en la Máquina
+
 Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular para crear shells PHP que nos permiten obtener acceso remoto al servidor. La ruta de la reverseshell es la siguiente:
 
 [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
@@ -127,7 +129,9 @@ export TERM=xterm
 export SHELL=bash
 ```
 
-## Intrusión en la Máquina
+
+
+## Usuario pingu
 
 Ya estamos dentro de la máquina. Si ejecutamos el comando `sudo -l`, vemos que podemos ejecutar `man` como `Pingu`. Para ello, debemos hacer lo siguiente:
 
@@ -148,13 +152,12 @@ Vemos que hemos subido de usuario y ya estamos con el usuario `pingu`.
 
 ![Cambio de usuario](https://github.com/user-attachments/assets/0c3da884-f0fb-45df-9692-59312d0752ab)
 
-## Usuario pingu
+## Usuario gladys
 
 Vamos a volver a ejecutar el comando `sudo -l`.
 
 ![Comando sudo](https://github.com/user-attachments/assets/0cedf58f-0919-4d19-a6eb-c37df62b1d4b)
 
-## Usuario gladys
 Observamos que podemos ejecutar `nmap` y `dpkg` como `gladys`. Para ello, debemos proceder de la siguiente manera:
 
 En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`.
@@ -178,4 +181,20 @@ Vamos a volver a ejecutar el comando `sudo -l`.
 
 Observamos que podemos ejecutar `chown` como `root`. Para ello, debemos proceder de la siguiente manera:
 
-Vamos a cambiar los permisos de `/etc/passwd` para poder tener permisos con nuestro usuario.
+Para empezar vamos a cambiar los permisos de `/etc/passwd` para poder tener permisos con nuestro usuario.
+```bash
+sudo /usr/bin/chown $(id -un):$(id -gn) /etc/passwd
+```
+Como no podemos usar `nano` y `vim` porque no se encuentra en en el sistema lo que haremos sera modificar el archivo con ´sed´ para  que elimine la X que tiene root para que la contraseña no nos la pida.
+```bash
+sed 's/^root:[^:]*:/root::/' /etc/passwd > /etc/passwd1
+```
+Para finalizar copiamos el tmp donde esta el original para que lo sobreescriba
+```bash
+cp /etc/passwd1 /etc/passwd
+```
+Ahora hacemos un `su root` y accederemos al usuario *root* sin proporcionar contraseña
+
+![image](https://github.com/user-attachments/assets/45c469ca-e1f3-4c7a-8025-920b591e5324)
+
+
