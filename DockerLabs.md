@@ -6,7 +6,7 @@ permalink: /categorias/dockerlabs/
 
 # 🚀 DockerLabs WriteUps
 
-Bienvenido a mi repositorio de **WriteUps** sobre máquinas vulnerables en **DockerLabs**. Aquí encontrarás guías detalladas para comprometer diversas máquinas en plataformas de laboratorio y CTF (Capture The Flag).
+Bienvenido a mi repositorio de **WriteUps** sobre máquinas vulnerables en la plataforma de **DockerLabs**, creada por [Pingüino de Mario](https://www.youtube.com/@ElPinguinoDeMario) 🐧. Aquí encontrarás guías detalladas para comprometer diversas máquinas en esta plataforma de laboratorios y competiciones **CTF** (*Capture The Flag*).
 
 ## 🔍 Buscar un WriteUp:
 
