@@ -37,7 +37,7 @@ Al acceder a la página web, observamos lo siguiente:
 
 ![image](https://github.com/user-attachments/assets/ede1f8d5-c313-4e69-94ee-aee4e813aa5e)
 
-Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio. El siguiente comando fue ejecutado:
+Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio.
 
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img
