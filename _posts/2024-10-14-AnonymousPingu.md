@@ -63,7 +63,6 @@ A continuación, intentamos conectarnos al servidor FTP utilizando el siguiente 
 ```bash
 ftp 172.17.0.2
 ```
-
 Al intentar acceder al servidor FTP con el usuario `anonymous` y sin contraseña, observamos que podemos entrar perfectamente. 
 
 ![image](https://github.com/user-attachments/assets/ea8254c0-879e-4ece-b542-3f19975c77a5)
@@ -129,15 +128,14 @@ export TERM=xterm
 export SHELL=bash
 ```
 
-
-
 ## Usuario pingu
 
 Ya estamos dentro de la máquina. Si ejecutamos el comando `sudo -l`, vemos que podemos ejecutar `man` como `Pingu`. Para ello, debemos hacer lo siguiente:
 
 ![Interfaz de la herramienta](https://github.com/user-attachments/assets/cef8486b-9c3c-4905-90b8-1dc9d1c54986)
 
-Este tipo de herramienta tiene un apartado que, al final, dice *MORE*. Si en lugar de presionar para bajar, escribimos `!/bin/bash`, se generará una shell con ese usuario.
+Esta herramienta tiene una sección al final que muestra `MORE`. Si en lugar de desplazarnos hacia abajo, escribimos `!/bin/bash`, se generará una shell con ese usuario.
+
 ```shell
 sudo -u pingu /usr/bin/man find
 ```
@@ -158,9 +156,7 @@ Vamos a volver a ejecutar el comando `sudo -l`.
 
 ![Comando sudo](https://github.com/user-attachments/assets/0cedf58f-0919-4d19-a6eb-c37df62b1d4b)
 
-Observamos que podemos ejecutar `nmap` y `dpkg` como `gladys`. Para ello, debemos proceder de la siguiente manera:
-
-En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`.
+Observamos que podemos ejecutar `nmap` y `dpkg` como `gladys`. En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`. En mi caso, utilizaré `dpkg` y aplicaré el mismo método que antes con `man`.
 
 ```bash
 sudo -u gladys /usr/bin/dpkg -l
@@ -175,21 +171,21 @@ Vemos que hemos subido de usuario y ya estamos con el usuario `gladys`.
 
 
 ## Usuario root
-Vamos a volver a ejecutar el comando `sudo -l`.
+Vamos a volver a ejecutar `sudo -l`.
 
 ![image](https://github.com/user-attachments/assets/fb5bbc2b-bd10-4091-bb4c-a9b168f0d487)
 
-Observamos que podemos ejecutar `chown` como `root`. Para ello, debemos proceder de la siguiente manera:
+Observamos que podemos ejecutar `chown` como `root`. Para ello, procedemos de la siguiente manera:
 
-Para empezar vamos a cambiar los permisos de `/etc/passwd` para poder tener permisos con nuestro usuario.
+Primero cambiamos los permisos de `/etc/passwd` para que nuestro usuario tenga permisos:
 ```bash
 sudo /usr/bin/chown $(id -un):$(id -gn) /etc/passwd
 ```
-Como no podemos usar `nano` y `vim` porque no se encuentra en en el sistema lo que haremos sera modificar el archivo con ´sed´ para  que elimine la X que tiene root para que la contraseña no nos la pida.
+Dado que no podemos usar `nano` o `vim` porque no están en el sistema instalados, utilizaremos `sed` para que elimine la X que tiene root para que la contraseña no nos la pida.
 ```bash
 sed 's/^root:[^:]*:/root::/' /etc/passwd > /etc/passwd1
 ```
-Para finalizar copiamos el tmp donde esta el original para que lo sobreescriba
+Para finalizar copiamos el `/etc/passwd1` donde esta el original para que lo sobreescriba
 ```bash
 cp /etc/passwd1 /etc/passwd
 ```
