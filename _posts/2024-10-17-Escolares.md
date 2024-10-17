@@ -53,29 +53,33 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-li
 - `-w` Especifica que diccionario queremos usar
 - `-x` Para indicar que tipo de extension queremos que nos encuentre
 
-  ![image](https://github.com/user-attachments/assets/f8a22e16-6c9d-4326-a1fc-133004368103)
-el 
+Al analizar el código fuente de la página, encontramos una ruta hacia `profesores.html`, donde descubrimos que `luisillo` es el administrador de la instalación de WordPress.
 
-#WordPress
+![image](https://github.com/user-attachments/assets/f8a22e16-6c9d-4326-a1fc-133004368103)
 
-Exploramos el directorio `wordpress`, pero antes de nada mirando el codigo fuente de la pagina encontramos otra ruta en `profesores.html`.
+# WordPress
+
+Exploramos el directorio `wordpress` y observamos que necesitamos ajustar el archivo `/etc/hosts` para que el dominio `escolares.dl` funcione correctamente.
+Añadimos lo siguiente a /etc/hosts:
 
 ![image](https://github.com/user-attachments/assets/6a175fca-b27a-4865-b269-c7235cc26717)
 
-Y vemos que luisillo es el adminstrador de `wordpress`, por lo que ya tenemos un usuario interesante, antes de ello vamos a ver que contiene la ruta wordpress para ello volveremos a usar `gobuster`.
-
-Tarda mucho en cargar, mirando vemos que intenta redirigirnos a escolares.dl pero como no lo tenemos en el `/etc/hosts` no llega a cargar del todo bien.
-
+```txt
+172.17.0.2 escolares.dl
+```
 ![image](https://github.com/user-attachments/assets/01d0e3c2-59a4-45c6-9a44-830b093601c1)
 
-Por lo que añadiremos.
-
-![image](https://github.com/user-attachments/assets/26d3c04e-4e2c-4aca-af76-f1dd69938f43)
-
-Si probamos otra vez , ahora incluso el `gobuster` funciona mejor.
+Repetimos el escaneo de directorios en `wordpress`:
 ```bash
 gobuster dir -u escolares.dl/wordpress -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img 
 ```
+
+![image](https://github.com/user-attachments/assets/26d3c04e-4e2c-4aca-af76-f1dd69938f43)
+
+Identificamos al usuario luisillo como administrador. Procedemos con un ataque de fuerza bruta para descubrir su contraseña.
+
+Si probamos otra vez , ahora incluso el `gobuster` funciona mejor.
+
 ![image](https://github.com/user-attachments/assets/78af7eab-189b-4cbb-a863-f28a2c2867f6)
 
 Nos encuentra muchas rutas interesantes , pero lo que haremos sera usar wpscan , que esta ella espeficamente para auditar paginas wordpress.
