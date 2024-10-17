@@ -64,18 +64,17 @@ Añadimos lo siguiente a /etc/hosts:
 
 ![image](https://github.com/user-attachments/assets/6a175fca-b27a-4865-b269-c7235cc26717)
 
+![image](https://github.com/user-attachments/assets/01d0e3c2-59a4-45c6-9a44-830b093601c1)
+
 ```txt
 172.17.0.2 escolares.dl
 ```
-![image](https://github.com/user-attachments/assets/01d0e3c2-59a4-45c6-9a44-830b093601c1)
+![image](https://github.com/user-attachments/assets/26d3c04e-4e2c-4aca-af76-f1dd69938f43)
 
 Repetimos el escaneo de directorios en `wordpress`:
 ```bash
 gobuster dir -u escolares.dl/wordpress -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img 
 ```
-
-![image](https://github.com/user-attachments/assets/26d3c04e-4e2c-4aca-af76-f1dd69938f43)
-
 Identificamos al usuario luisillo como administrador. Procedemos con un ataque de fuerza bruta para descubrir su contraseña.
 
 Si probamos otra vez , ahora incluso el `gobuster` funciona mejor.
