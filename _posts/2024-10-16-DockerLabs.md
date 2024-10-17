@@ -124,3 +124,39 @@ export TERM=xterm
 export SHELL=bash
 ```
 
+#Intrucion
+Al ejecutar el comando `sudo -l`, observamos que podemos ejecutar `cut` y `grep` como `root`. Si no sabemos cómo aprovechar esto, podemos recurrir a [GTFOBins](https://gtfobins.github.io/).
+
+![image](https://github.com/user-attachments/assets/050429b9-46eb-4e55-b3d9-5a0a4dfaab65)
+
+Haciendo un reconocimiento basico por los directorios `tmp` y `opt`, encontramos un archivo `nota.txt`, dentro del direcotio `opt`.
+
+![image](https://github.com/user-attachments/assets/7dfda6ac-8eab-481e-a071-f11b32abeca0)
+
+Nos dice que la clave de root, se encuentra en el directorio` /root/clave.txt`, entonces a traves de `cut` y `grep` podemos ver el contenido de ese documento.
+
+Con `grep` debemos de poner lo siguiente:
+
+```bash
+LFILE=/root/clave.txt
+sudo grep '' $LFILE
+```
+![image](https://github.com/user-attachments/assets/5b324fbb-b64c-4a1b-aa5d-f1e4878f8684)
+
+Y ya tendriamos la clave 
+
+Con `cut` seria de la siguiente manera:
+
+```bash
+LFILE=/root/clave.txt
+sudo cut -d "" -f1 "$LFILE"
+```
+
+![image](https://github.com/user-attachments/assets/8ed6e903-1fc8-4882-a5e4-2a808f2ec181)
+
+Probamos la clave
+
+![image](https://github.com/user-attachments/assets/a673a51c-421f-4b9b-aba6-58b912e14509)
+
+Ya seriamos root.
+
