@@ -59,7 +59,7 @@ Al revisar el archivo `qdefense.txt`, encontramos un acertijo:
 
 ## Port Knocking
 
-Obtenemos que hay un user llamado `toctoc` y una secuencia de números que puede ser una secuencia de `Port Knocking`.  *El Port Knocking* es una técnica de seguridad en la que se debe enviar una secuencia específica de conexiones a ciertos puertos para desbloquear un puerto cerrado..
+Obtenemos que hay un user llamado `toctoc` y una secuencia de números que puede ser una secuencia de `Port Knocking`.  **El Port Knocking** es una técnica de seguridad en la que se debe enviar una secuencia específica de conexiones a ciertos puertos para desbloquear un puerto cerrado..
 
 Para instalar `knock` en Kali:
 ```bash
