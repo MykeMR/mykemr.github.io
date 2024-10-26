@@ -37,11 +37,9 @@ nmap -p80,443 -sCV 172.17.0.2 -oG targeted
 ![image](https://github.com/user-attachments/assets/454db12c-80e6-4883-b45e-bd5ebedde5cd)
 
 # Exploración Web
-En el puerto `80`, observamos que hay un archivo `backup.txt`.
+Al navegar en el puerto `80`, encontramos un archivo `backup.txt` que contiene la siguiente información encriptada:
 
 ![image](https://github.com/user-attachments/assets/c223e6da-3c42-4ce9-8f6c-135dac67d123)
-
-Al revisar su contenido vemos lo siguiente.(Explica que es).
 
 ```txt
 /// The users mateo password is ////
@@ -54,11 +52,9 @@ Al revisar su contenido vemos lo siguiente.(Explica que es).
 ////////////////////////////////////
 ```
 
-Por lo que que se ve pone que esa encriptado en el cifrado cesar. (Explica que era el cifrado Cesar brevemente).Si intentamos averiguar lo que pone podemos ver que la que mas se asemeja es `easycrazy`.
+Esto indica que el texto está encriptado mediante el **cifrado César** (un método antiguo donde se desplazan letras en el alfabeto). Aplicando el cifrado César, descubrimos que la palabra encriptada `hdvbfuadcb` se traduce como `easycrazy`.
 
 ![image](https://github.com/user-attachments/assets/b267e0da-c76c-4e08-b998-d81d1639215d)
-
-Tenemos eso pero no sabemos como usarlo asi que haremos fuzzing, por si exite algun directorio mas.
 
 Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio.
 ```bash
@@ -71,36 +67,31 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-li
 
 ![image](https://github.com/user-attachments/assets/4124f3fa-0b88-4c21-896b-45ff077a1736)
 
-Viendo el escaneo del principio vemos que el puerto 443 responde al nombre de host: `picadilly.lab` , con lo que vamos a añadirlo al `/etc/hosts` y analizar que contiene esa pagina.
+Observamos que el puerto `443` responde al nombre `picadilly.lab`, así que añadimos este dominio en `/etc/hosts` y accedemos a esta página, donde encontramos una sección de subida de archivos y una ruta `uploads.php` en el código fuente.
 
 ![image](https://github.com/user-attachments/assets/fc002df1-e9f5-4c21-be95-0544d4f4068c)
 
-Al explorar la pagina del puerto `443` vemos a primera vista que hay un apartado de subida de archivos y una ruta dentro del codigo fuente de la pagina llamado `uploads.php`, asi que empezaremos por ahi.
-
 ## Intrusión en la Máquina
-Lo primero que haremos sera subir una reverseshell por `php`, ya que hemos visto  la pagina de subida su extension es `uplodas.php` suponemos que la pagina responde  `php.
-
-Generamos la reverseshell utilizando **Pentest Monkey**, una herramienta popular para crear shells PHP que nos permiten obtener acceso remoto al servidor. La ruta de la reverseshell es la siguiente:
+Aprovechamos la sección de subida de archivos para cargar una reverseshell en PHP. ara esto, generamos una reverseshell desde **Pentest Monkey**, una herramienta popular para crear shells PHP que nos permiten obtener acceso remoto al servidor. La ruta de la reverseshell es la siguiente:
 
 [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php)
 
-Nos ponemos a escuchar por netcat en mi caso por el 4444
+### Pasos para Cargar la Reverseshell
 
+1. **Preparar la Reverseshell**: Configuramos la reverseshell en nuestro sistema..
+2. **Subir el Archivo**: Cargamos el archivo en la sección de subida.
+3. **Ejecutar la Reverseshell**: Accedemos a la ruta de la reverseshell cargada para activar la conexión.
+
+En paralelo, escuchamos en nuestro sistema usando `netcat`:
 ```bash 
 nc -lvnp 4444
 ```
-
-### Pasos para Cargar la Reverseshell
-
-1. **Preparar la Reverseshell**: Creamos un archivo de reverseshell en nuestro sistema local utilizando el código disponible en la ruta mencionada anteriormente.
-2. **Subir el Archivo**: pasamos el archivo para subir al apartado de subida de la pagina.
-3. **Ejecutar la Reverseshell**: Una vez que el archivo esté en el servidor, lo ejecutaremos para establecer la conexión.
 
 Luego, accedemos a la ruta de la página web donde hemos cargado la reverseshell:
 
 ![image](https://github.com/user-attachments/assets/4f49a3e9-f08d-4bdb-8af7-ea29c73bed4a)
 
-Y ya tendriamos acceso a la maquina.
+Obtuvimos acceso inicial al servidor como www-data.
 
 ![image](https://github.com/user-attachments/assets/ec688504-bc7e-4c03-8809-5fa9760664b2)
 
@@ -153,12 +144,10 @@ Al ejecutar `sudo -l`, notamos que spencer tiene permisos para ejecutar `php` co
 
 ![image](https://github.com/user-attachments/assets/e3dbe429-7ac7-4042-a694-18af209e67b1)
 
-Por lo que generaremos una shell a traves de php y entraremos.
-
 ```bash
 sudo /usr/bin/php -r "pcntl_exec('/bin/sh', ['-p']);"
 ```
 
-Ya somos root 
+Con este comando, obtuvimos acceso root.
 
 ![image](https://github.com/user-attachments/assets/f15c6502-638b-45a7-a34e-555f458897ef)
