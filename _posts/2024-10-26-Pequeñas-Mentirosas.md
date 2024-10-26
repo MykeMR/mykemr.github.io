@@ -32,7 +32,7 @@ Durante el escaneo, descubrimos que los siguientes puertos están activos:
 A continuación, evaluamos si los puertos abiertos presentan alguna vulnerabilidad, además de obtener más información sobre los servicios asociados a esos puertos.
 
 ```bash
-nmap -p 22,80,3000 -sCV 172.17.0.2 -oG targeted
+nmap -p 22,80 -sCV 172.17.0.2 -oG targeted
 ```
 ![image](https://github.com/user-attachments/assets/1cb3e4d7-e634-4a95-9682-be2a7a03e5e4)
 
