@@ -160,7 +160,7 @@ su enter
 
 # Escalada de Privilegios 
 
-Al ejecutar `sudo -l`, notamos que spencer tiene permisos para ejecutar `cat` como `root` y `whoami` como `root` .Utilizando [GTFOBins](https://gtfobins.github.io/gtfobins/awk/#shell) sabemos cómo explotar estos binarios.
+Al ejecutar `sudo -l`, notamos que tiene permisos para ejecutar `cat` como `root` y `whoami` como `root` .Utilizando [GTFOBins](https://gtfobins.github.io/gtfobins/awk/#shell) sabemos cómo explotar estos binarios.
 
 ![image](https://github.com/user-attachments/assets/e72c8d19-7017-480f-9c15-c52d5fd1114a)
 
