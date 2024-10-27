@@ -30,7 +30,6 @@ Durante el escaneo, descubrimos que los siguientes puertos están activos:
 - `22` (SSH)
 - `80` (HTTP)
 A continuación, evaluamos si los puertos abiertos presentan alguna vulnerabilidad, además de obtener más información sobre los servicios asociados a esos puertos.
-
 ```bash
 nmap -p22,80 -sCV 172.17.0.2 -oG targeted
 ```
@@ -38,24 +37,22 @@ nmap -p22,80 -sCV 172.17.0.2 -oG targeted
 
 # Exploración Web
 
-En el puerto `80`, vemos que hay una pagina web la cual contiene un mensaje de Advertencia y dos botones uno que pone `Hacer clic aquí podría empeorar la situación.` y otro que pone `Ejemplos de computadoras infectadas`.
+Accedemos al puerto `80` y encontramos una página web con un mensaje de advertencia y dos botones: "Hacer clic aquí podría empeorar la situación" y "Ejemplos de computadoras infectadas".
 
 ![image](https://github.com/user-attachments/assets/303820c1-440e-4ad1-b3b0-6e5d1e27018c)
 
-
-Viendo que codigo fuente vemos que `Ejemplos de computadoras infectadas` vemos que nos redirige a esta ruta `ejemplos.php?images=./ejemplo1.png'`.
+Al probar con esa ruta, el archivo se carga sin problemas, lo cual indica que posiblemente estamos ante una vulnerabilidad **LFI (Local File Inclusion)**. Esto permite incluir archivos locales en el servidor al manipular el parámetro `images`.
 
 ![image](https://github.com/user-attachments/assets/b86d67c6-9b0e-4fa4-810d-d617e6d4ad5c)
 
-Vamos a acceder a esa ruta antes que cualquier cosa.
+Para confirmar, intentamos leer el archivo `/etc/passwd`, que lista los usuarios en el sistema:
 
 ![image](https://github.com/user-attachments/assets/ee0c3bfc-c679-47cf-bcc2-9fdc25cc7eca)
-
-La ruta que podemos ver, lo primero que se me ocurre es porbar la vulnerabiliadad LFI (Explica brevemente).Para ello pondremo lo siguiente.
 
 ```URL
 http://172.17.0.2/ejemplos.php?images=./../../../etc/passwd
 ```
+
 ![image](https://github.com/user-attachments/assets/da7342eb-23a3-4476-b2a8-36cf38cfaa5f)
 
 Vamos a ver que mas podemos hacer , ya que el puerto `22` esta abierto vamos a ver si podemos sacar el `.ssh` de algun usuario.
@@ -64,25 +61,24 @@ Vamos a ver que mas podemos hacer , ya que el puerto `22` esta abierto vamos a v
 
 # Intrusion
 
-Existe el usuario `nico` por lo que probaremos si tiene su `id_rsa` (Explica que es brevemente) y asi poder acceder desde su usuario.
+Descubrimos el usuario `nico` en `/etc/passwd`. Dado que el puerto `22` está abierto, intentamos obtener la clave SSH privada (`id_rsa`) de nico para acceder al sistema como él. El archivo `id_rsa` en `.ssh` contiene una clave privada que permite autenticación SSH sin contraseña.
+
+Intentamos cargar el archivo de clave privada con LFI:
 
 ```URL
 http://172.17.0.2/ejemplos.php?images=./../../../home/nico/.ssh/id_rsa
 ```
 ![image](https://github.com/user-attachments/assets/4b2a0dea-55c1-4d11-816f-e6617861c8eb)
 
-Ya obtuvimos su` id_rsa `.
-
-La copiamos en nuestra maquina y accedemos con ella. 
+Copiamos el contenido del archivo `id_rsa` en nuestra máquina y le damos permisos adecuados antes de conectarnos:
 
 ```bash
-ssh -i id_rsa  nico@172.17.0.2                        
+chmod 600 id_rsa
+ssh -i id_rsa nico@172.17.0.2                      
 ```
-
-Ya estamos dentro con el usaurio `nico`.
+Esto nos da acceso al sistema como el usuario `nico`.
 
 ![image](https://github.com/user-attachments/assets/864916ad-318b-4853-a86f-6b4110b300b8)
-
 
 # Escalada de Privilegios.
 
@@ -90,9 +86,10 @@ Al ejecutar `sudo -l`, notamos que spencer tiene permisos para ejecutar `env` co
 
 ![image](https://github.com/user-attachments/assets/d2ca0d5c-82ce-432f-8d60-329ce7205c51)
 
+Ejecutamos el siguiente comando para obtener una shell con privilegios de root:
 ```bash
 sudo env /bin/sh
 ```
-Con este comando, obtuvimos acceso root.
+Al ejecutar este comando, accedemos como root.
 
 ![image](https://github.com/user-attachments/assets/aee995db-8183-4286-9b25-71893c4199d3)
