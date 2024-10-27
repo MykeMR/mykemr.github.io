@@ -82,7 +82,7 @@ Esto nos da acceso al sistema como el usuario `nico`.
 
 # Escalada de Privilegios.
 
-Al ejecutar `sudo -l`, notamos que spencer tiene permisos para ejecutar `env` como `root`.Utilizando [GTFOBins](https://gtfobins.github.io/gtfobins/awk/#shell) sabemos cómo explotar estos binarios.
+Al ejecutar `sudo -l`, notamos que tiene permisos para ejecutar `env` como `root`.Utilizando [GTFOBins](https://gtfobins.github.io/gtfobins/awk/#shell) sabemos cómo explotar estos binarios.
 
 ![image](https://github.com/user-attachments/assets/d2ca0d5c-82ce-432f-8d60-329ce7205c51)
 
