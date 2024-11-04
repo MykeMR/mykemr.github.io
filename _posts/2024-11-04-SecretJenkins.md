@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/9fa3bcdd-34ec-405d-810d-f0f33883ef82)---
+---
 title: SecretJenkins - DockerLabs
 published: true
 categories: DockerLabs
