@@ -4,6 +4,9 @@ title: DockerLabs
 permalink: /categorias/dockerlabs/
 ---
 
+<link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+
+
 # 🚀 DockerLabs WriteUps
 Bienvenido a mi repositorio de **WriteUps** sobre máquinas vulnerables en la plataforma de **DockerLabs**, creada por [Pingüino de Mario](https://www.youtube.com/@ElPinguinoDeMario) 🐧. Aquí encontrarás guías detalladas para comprometer diversas máquinas en esta plataforma de laboratorios **CTF** (*Capture The Flag*).
 
