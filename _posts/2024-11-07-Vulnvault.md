@@ -36,9 +36,8 @@ nmap -p22,80 -sCV 172.17.0.2 -oG targeted
 ![image](https://github.com/user-attachments/assets/2c3ffc6c-8f3f-4cb9-8c05-cbfbfd15aad3)
 
 # Exploración Web
-Al analizar el puerto `80`, encontramos una página con varios apartados uno de un formulario y otro de subida de archivos.
+Al inspeccionar el puerto `80`, encontramos una página con dos secciones: un formulario y una opción de carga de archivos. Ejecutamos **Gobuster** para identificar posibles directorios ocultos en el sitio web:
 
-Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio.
 ```bash
 gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,doc,html,txt,img
 ```
@@ -52,17 +51,15 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-li
 # Apartado de subida de archivos.
 
 ## Reverse Shell
-Vamos a probar a subir un archivo shell.php, la pagina dice que esta configurada para subir archivos de forma segura, por lo que habra que ofuscar las medidas de seguridad.
+Intentamos cargar una reverse shell PHP (shell.php) mediante la función de subida, que indica estar configurada para bloquear archivos inseguros.
 
 ![image](https://github.com/user-attachments/assets/bc37ab0d-53ef-44e5-8dd6-64ba5a9f7a98)
 
-Creamos un archivo `shell.php` y cargamos una reverse shell usando la herramienta [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php) para crear una shell en PHP. La reverse shell se encuentra disponible en:
+Usamos una reverse shell de [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php) para intentar obtener acceso. Aunque la subida se completa, no encontramos el archivo en `/uploads.php`.
 
 ![image](https://github.com/user-attachments/assets/95b68f1c-c4fb-40a2-8bcd-50ea2dae3809)
 
-Parece que no hemos tenido que oufscar nada, una vez subido el archivo, accedemos a la ruta `/upload.php` y ejecutamos la shell.
-
-No salta un mensaje de que se ha subido el archivo accedmos a la ruta /uploads.php , pero no hay nada.
+Al analizar la respuesta en `Burp Suite`, vemos un mensaje de error en la subida del archivo:
 
 ![image](https://github.com/user-attachments/assets/57d25f26-c130-4c67-b121-413f1309a9dc)
 
@@ -72,14 +69,14 @@ Mirando con burpsuite podemos observar que en response nos indica que tuvo un er
 
 # Apartado de formulario.
 
-En el apartado de formulario vemos que si escribimos algo el servidor lo muestra, mirando vemos que hay un `script.js` que es el que se encarga de bloquear intentos de generar comandos.
+Observamos que cualquier texto ingresado en el formulario es reflejado por el servidor. Un archivo `script.js` intenta bloquear ciertos comandos en las entradas del formulario.
 
 ![image](https://github.com/user-attachments/assets/8da628ac-2ddf-4376-b7a6-8cf9d38b72cd)
 
 
 ![image](https://github.com/user-attachments/assets/d46c00ad-e702-4660-8554-08f99ea8057a)
 
-Probando diferentes maneras de escapar los comandos podemos observar que esto ocurre cuando insertamos `;` y luego un comando, es válido en cualquiera de los campos.
+Al probar diferentes métodos para escapar la restricción de comandos, descubrimos que insertar un comando tras el carácter `;` permite ejecutarlo en el servidor.
 
 ![image](https://github.com/user-attachments/assets/0eaf4fd2-cab4-4778-9ca7-88c3ee11908c)
 
@@ -87,11 +84,11 @@ Por lo que podemos hacer muchas cosas , desde generar una reverseshell a enumera
 
 ## Obtener id_rsa
 
-Tenemos un usuario `samara`.
+Utilizamos este método para acceder al archivo id_rsa de un usuario llamado `samara`.
 
 ![image](https://github.com/user-attachments/assets/ff67b1ed-4419-4b55-bcc7-492b3fa15aa9)
 
-Tenemos en id_rsa de `samara`.
+Guardamos la clave privada `id_rsa` en nuestro sistema para usarla más adelante.
 
 ![image](https://github.com/user-attachments/assets/4e62f320-27f4-44ee-91d7-a3b9d1c5a222)
 
@@ -101,8 +98,7 @@ Lo guardamos en nuestra maquina.
 
 
 # Intrusion Samara
-Accedemos por ssh al usuario `samara`.
-
+Utilizando `ssh`, accedemos al sistema como `samara`:
 ```bash
 ssh -i id_rsa samara@172.17.0.2
 ```
@@ -111,25 +107,20 @@ Ya estamos dentro
 
 ![image](https://github.com/user-attachments/assets/98c3a361-7fe3-4ece-b3e3-ed537da64eb6)
 
-Revisamos permisos SUID y las capabilities y podemos observar que no tenemos nada que nos pueda ser útil.
-
+Examinamos permisos **SUID** , sin encontrar opciones útiles:
 ```bash
 find / -perm -4000 2>/dev/null
 ```
 
-Usaremos `pspy64` para ver si tenemos algún archivo que nos pueda ser útil. Copiamos el archivo en nuestro directorio actual e indicamos nuestro servidor en Python.
+Descargamos `pspy64` en el sistema para monitorear procesos en ejecución y detectar posibles vulnerabilidades.
 
 ![image](https://github.com/user-attachments/assets/25a77ea5-6617-4c4d-8bc5-87476c4359ab)
 
-Descargamos el archivo en la carpeta /tmp.
+Descargamos el archivo en la carpeta `/tmp`.
 
 ![image](https://github.com/user-attachments/assets/75581b4f-3b0a-4b4d-a918-52b048a9ce21)
 
-Damos permisos de ejecución y luego ejecutamos.
-
-![image](https://github.com/user-attachments/assets/68af8099-7743-4b64-bff5-f0e1b9d97326)
-
-Revisando los archivos podemos observar que se está ejecutando constantemente el archivo `echo.sh`.
+Después de ejecutar `pspy64`, descubrimos que el script `echo.sh` se ejecuta recurrentemente.
 
 ![image](https://github.com/user-attachments/assets/bcb8882c-e18d-44b0-bf55-d57607886a1c)
 
@@ -137,12 +128,11 @@ Vamos al directorio y podemos observar que este script generaba el archivo que v
 
 ![image](https://github.com/user-attachments/assets/430bb375-e98f-4e12-ae43-b37ca6b959e0)
 
-Tenemos permisos para modificar el archivo por lo que añadiremos lo siguiente.
+Nos dirigimos al directorio de `echo.sh`, donde verificamos que podemos modificar el script. Insertamos un comando para obtener una shell de root.
 
 ![image](https://github.com/user-attachments/assets/8954cdc0-ac1b-4f4d-a7bd-f25bab438ae6)
 
-Ahora solo falta ejecutar el siguiente comando y ya somo root.
-
+Para escalar privilegios, ejecutamos:
 ```bash 
 bash -p
 ```
@@ -150,3 +140,10 @@ bash -p
 ![image](https://github.com/user-attachments/assets/4f575857-dca7-4e2b-8841-7283268c7015)
 
 Ya somos root.
+
+
+
+
+
+
+
